@@ -17,7 +17,6 @@ public class DB {
     public Connection Conexion(){
      try{
          con = DriverManager.getConnection("jdbc:mysql://localhost/parqueadero_udec","root","");
-         System.out.println("Conexion exitosa");
      }catch(Exception e){
          JOptionPane.showMessageDialog(null,e.getMessage());
          
