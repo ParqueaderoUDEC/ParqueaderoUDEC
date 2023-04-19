@@ -45,6 +45,7 @@ public class Ingreso extends javax.swing.JFrame {
         RButMoto = new javax.swing.JRadioButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TAreaNotas = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -98,8 +99,9 @@ public class Ingreso extends javax.swing.JFrame {
 
         TAreaNotas.setColumns(20);
         TAreaNotas.setRows(5);
-        TAreaNotas.setText("Notas.");
         jScrollPane1.setViewportView(TAreaNotas);
+
+        jLabel4.setText("Notas.");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -127,7 +129,10 @@ public class Ingreso extends javax.swing.JFrame {
                         .addComponent(jButton1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 12, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -142,7 +147,9 @@ public class Ingreso extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(RButMoto)
                     .addComponent(RButCarro))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
@@ -205,15 +212,11 @@ public class Ingreso extends javax.swing.JFrame {
         RButMoto.setSelected(false);
         RButCarro.setSelected(false);
         DB obdb = new DB();
-        Connection con = obdb.Conexion();
+        ResultSet res = obdb.Consulta(TxtUsuario.getText().trim());
         try {
-            PreparedStatement pst = con.prepareStatement("SELECT * FROM USUARIOS WHERE Documento =?");
-            pst.setString(1, TxtUsuario.getText().trim());
-
-            ResultSet res = pst.executeQuery();
             if (res.next()) {
                 TxtPlaca.setText(res.getString("Placa"));
-                if ((res.getString("TipoVehiculo"))!= null) {
+                if ((res.getString("TipoVehiculo")) != null) {
                     if ((res.getString("TipoVehiculo")).equals("MOT")) {
                         RButMoto.setSelected(true);
 
@@ -236,10 +239,23 @@ public class Ingreso extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        DB obdb = new DB();
+        String TVh="";
+        if(RButMoto.isSelected()){
+            TVh="MOT";
+        }else if(RButCarro.isSelected()){
+            TVh="CAR";
+        }
+        obdb.RegIngreso(TxtUsuario.getText().trim(),TVh,TxtPlaca.getText().trim(),TAreaNotas.getText());
+        
+                
         TxtUsuario.setText("");
         TxtPlaca.setText("");
         RButMoto.setSelected(false);
         RButCarro.setSelected(false);
+        TAreaNotas.setText("");
+        
+        JOptionPane.showMessageDialog(null, "Usuario Registrado con Exito");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void TxtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtUsuarioActionPerformed
@@ -303,6 +319,7 @@ public class Ingreso extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
